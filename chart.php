@@ -38,8 +38,10 @@ else
 
 $data = explode('*',$data);
 
-if ($label != '') $label = explode('*',$label);
+if ($label != '') 
+   $label = explode('*',$label);
 
+$text_length = 0;
 for ($i = 0; $i < count($label); $i++) 
 {
 	if ($data[$i]/array_sum($data) < 0.1) $number[$i] = ' '.number_format(($data[$i]/array_sum($data))*100,2,',','.').'%';
@@ -49,19 +51,23 @@ for ($i = 0; $i < count($label); $i++)
 
 if (is_array($label))
 {
-$antal_label = count($label);
-$xtra = (5+15*$antal_label)-($height+ceil($shadow_height));
-if ($xtra > 0) $xtra_height = (5+15*$antal_label)-($height+ceil($shadow_height));
+	$antal_label = count($label);
+	$xtra = (5+15*$antal_label)-($height+ceil($shadow_height));
+	if ($xtra > 0) 
+		$xtra_height = (5+15*$antal_label)-($height+ceil($shadow_height));
 
-$xtra_width = 5;
-if ($show_label) $xtra_width += 20;
-if ($show_percent) $xtra_width += 45;
-if ($show_text) $xtra_width += $text_length*8;
-if ($show_parts) $xtra_width += 130;
+	$xtra_width = 5;
+	if ($show_label) $xtra_width += 20;
+	if ($show_percent) $xtra_width += 45;
+	if ($show_text) $xtra_width += $text_length * 8;
+	if ($show_parts) $xtra_width += 130;
 }
 
-if ($heading) $xtra_height += 33;
-$img = ImageCreateTrueColor($width+$xtra_width, $height+ceil($shadow_height)+$xtra_height);
+$xtra_height = 0;
+if ($heading) 
+	$xtra_height += 33;
+$img = ImageCreateTrueColor(1200, $height+ceil($shadow_height)+$xtra_height);
+//$img = ImageCreateTrueColor($width+$xtra_width, $height+ceil($shadow_height)+$xtra_height);
 
 //imagecolortransparent($img,$background_color);
 ImageFill($img, 0, 0, colorHex($img, $background_color));
@@ -77,46 +83,51 @@ $font = '.'.$fontsdir.'FreeSans.ttf';
 
 if (is_array($label))
 {
-
-for ($i = 0; $i < count($label); $i++) 
-{
-	if ($label_form == 'round' && $show_label)
+	for ($i = 0; $i < count($label); $i++) 
 	{
-		imagefilledellipse($img,$width+60,$label_place+5,13,13,colorHex($img, $colors[$i % count($colors)]));
-		imageellipse($img,$width+60,$label_place+5,13,13,colorHex($img, $text_color));
-	}
-	else if ($label_form == 'square' && $show_label)
-	{	
-		imagefilledrectangle($img,$width+47,$label_place,$width+65,$label_place+12,
-                                     colorHex($img, $colors[$i % count($colors)]));
-		imagerectangle($img,$width+47,$label_place,$width+65,$label_place+12,
-                                     colorHex($img, $text_color));
+		if ($label_form == 'round' && $show_label)
+		{
+			imagefilledellipse($img,$width+60,$label_place+5,13,13,colorHex($img, $colors[$i % count($colors)]));
+			imageellipse($img,$width+60,$label_place+5,13,13,colorHex($img, $text_color));
+		}
+		else if ($label_form == 'square' && $show_label)
+		{	
+			imagefilledrectangle($img,$width+47,$label_place,$width+65,$label_place+12,
+                	                    colorHex($img, $colors[$i % count($colors)]));
+			imagerectangle($img,$width+47,$label_place,$width+65,$label_place+12,
+        	                             colorHex($img, $text_color));
+		}
+
+		if ($show_percent) $label_output = $number[$i].'  ';
+	   	if ($show_text) $label_output = $label_output.$label[$i].'  ';
+		if ($show_parts) $label_output = $label_output.$data[$i];
+
+	        if (strlen($label_output) > 90) {
+		        $label_output = substr($label_output, 0, 90);
+                	$label_output .= '...';
+	        }
+
+		//imagestring($img,'4',$width+20,$label_place,$label_output,colorHex($img, $text_color));
+	        imagettftext($img, 13, 0, $width+50+25,$label_place+12, colorHex($img, $text_color),$font,$label_output);
+		$label_output = '';
+		$label_place = $label_place + 17;
 	}
 
-	if ($show_percent) $label_output = $number[$i].' ';
-	if ($show_text) $label_output = $label_output.$label[$i].' ';
-	if ($show_parts) $label_output = $label_output.$data[$i];
-
-	//imagestring($img,'4',$width+20,$label_place,$label_output,colorHex($img, $text_color));
-        imagettftext($img, 13, 0, $width+50+25,$label_place+12, colorHex($img, $text_color),$font,$label_output);
-	$label_output = '';
-	$label_place = $label_place + 17;
+	if ($heading) {
+		//imagestring($img, '4', 20, $height+ceil($shadow_height)+10, $heading,colorHex($img, $text_color));
+		imagettftext($img, 14, 0, ($width/2)-15, $height+ceil($shadow_height)+20, colorHex($img, $text_color), $font,
+        	             $heading);
+	}
+	//strtoupper($heading));
 }
 
-if ($heading)
-   //imagestring($img, '4', 20, $height+ceil($shadow_height)+10, $heading,colorHex($img, $text_color));
-   imagettftext($img, 14, 0, ($width/2)-15, $height+ceil($shadow_height)+20, colorHex($img, $text_color), $font,
-                $heading);
-                //strtoupper($heading));
-}
 $centerX = round($width/2) + 40;
 $centerY = round($height/2) + 10;
 $diameterX = $width-4;
 $diameterY = $height-4;
-
 $data_sum = array_sum($data);
-
 $start = 270;
+$value = $value_counter = 0;
 
 for ($i = 0; $i < count($data); $i++) 
 {

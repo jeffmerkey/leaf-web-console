@@ -1,9 +1,8 @@
 <?php
 // CONFIG
 $servers = array(
-	array('local', '127.0.0.1', 6379),
-	array('six', '[::1]', 6379),
-	array('ten', '10.0.0.1', 6379),
+	array('ipv4', '127.0.0.1', 6379),
+	array('ipv6', '[::1]', 6379),
 );
 // END CONFIG
 

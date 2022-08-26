@@ -266,6 +266,7 @@ function sendMemcacheCommands($command){
 function sendMemcacheCommand($server,$port,$command){
 	global $use_authfile;
 
+        # may require setsebool -P httpd_can_network_connect 1
 	$s = @fsockopen($server, $port, $errorcode, $errormsg, 1);
 	if (!$s){
            print '<div style="text-align:left; margin-left: 5%; font-size:13pt; font-weight:bold;">';

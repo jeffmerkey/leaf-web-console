@@ -594,6 +594,7 @@ function tracking()
                           (isset($_SESSION['activename']) ? $_SESSION['activename'] : "")."\n", 
                           FILE_APPEND);
     }
+    //block_ip();
     return;
 }
 
@@ -601,14 +602,14 @@ function block_message($addrinfo)
 {
    global $sitename;
 
-   top($sitename." | Blocked");
+   top_sparse($sitename." | Blocked");
    print '<fieldset>';
    print '<br/><div style="text-align:center; font-size:16pt; font-weight:bold;">';
    print "The IP address ".$addrinfo." is not enabled to access this site.<br/><br>";
    print "</div>";
    print '</fieldset>';
    print '<br style="clear:both;"/>';
-   bottom();
+   bottom_sparse();
    return;
 }
 
@@ -668,7 +669,7 @@ function block_ip()
       $ipnum = ip2long($ip);
       $ipv4 = long2ip($ipnum);
 
-      $blockfile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/clients-allow.conf');
+      $blockfile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/acl/clients-allow.conf');
       $blocklist = explode("\n", $blockfile);
       $lines = array();
       foreach ($blocklist as $key => $v) {
@@ -677,7 +678,6 @@ function block_ip()
             $lines[] = $text;
       }
       $lines = array_values(array_filter($lines));
-      print_r($lines);
 
       for ($i = 0; $i < count($blocklist); $i++)
       {
@@ -717,7 +717,7 @@ function block_ip()
          }
       }
 
-      $blockfile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/clients-deny.conf');
+      $blockfile = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/acl/clients-deny.conf');
       $blocklist = explode("\n", $blockfile);
       $lines = array();
       foreach ($blocklist as $key => $v) {
@@ -726,7 +726,7 @@ function block_ip()
             $lines[] = $text;
       }
       $lines = array_values(array_filter($lines));
-      print_r($lines);
+      //print_r($lines);
    
       for ($i = 0; $i < count($blocklist); $i++)
       {
@@ -3583,7 +3583,7 @@ function search($page)
    global $languages, $language_detection;
    global $db_table, $use_netcache;
 
-   $start = '';
+   $start = 0;
    $search_condensed = 0;
 
    foreach ($_GET as $f => $v)
@@ -3775,6 +3775,9 @@ function search($page)
    function procids($id) { return $id[0]; }
    $idscompat = array_map('procids', $ids);
 
+   if (!isset($start))
+      $start = 0;
+
    $pg = new PG;
    $pg_window = 13;
    $pg_width = 10;
@@ -3807,9 +3810,12 @@ function search($page)
       foreach($ips as $ipaddr) {
 	if ($ipaddr) {
 	        $host = gethostbyaddr($ipaddr);
-	   	$sel = ($ip == $ipaddr) ? ' SELECTED' : '';
+                if (isset($ip)) 
+	   	   $sel = ($ip == $ipaddr) ? ' SELECTED' : '';
+                else
+	   	   $sel = '';
 		if (isset($host) and $host) {
-		   	echo "<option value=\"".$ipaddr."\" $sel>$ipaddr ($host)</option>";
+		   	echo "<option value=\"".$ipaddr."\" $sel>$host</option>";
 		}
 		else
    			echo "<option value=\"".$ipaddr."\" $sel>$ipaddr</option>";
@@ -4095,11 +4101,8 @@ function search($page)
 */
          if (stristr($meta, ".pdf"))
          {
-            echo '<table style="float:left;text-align:left;"><tr>';
-            echo '<td><img style="vertical-align:left;padding-right:10px;" src="'.imageURL().
-                 'pdf_icon.png" alt=""/></td><td>';
-
             $allurl = array();
+            $allpdf = array();
             $pdfs = explode("\n", $meta);
             $i = 0;
 
@@ -4127,16 +4130,26 @@ function search($page)
                      echo ', ';
 
                   $tmp = explode('/', $v);
-                  echo '<a href="'.$v.'">'.str_replace('%20',' ',array_pop($tmp)).'</a>';
+                  $allpdf[] = '<a href="'.$v.'">'.str_replace('%20',' ',array_pop($tmp)).'</a>';
                   if ($i > 2)
                   {
-                     echo '  <a href="'.baseURL().'?page=pdfcache&amp;cache='.$o->id.
-                          '">...</a>';
+                     $allpdf[] = '  <a href="'.baseURL().'?page=pdfcache&amp;cache='.
+                                 $o->id.'">...</a>';
                      break;
                   }
                }
             }
-            echo '</td></tr></table><br style="clear:both;"/>';
+
+            if (count($allpdf)) {
+               echo '<table style="float:left;text-align:left;"><tr>';
+               echo '<td><img style="vertical-align:left;padding-right:10px;" src="'.imageURL().
+                    'pdf_icon.png" alt=""/></td><td>';
+
+	       foreach($allpdf as $pdflink) {
+                  echo $pdflink;
+               }
+               echo '</td></tr></table><br style="clear:both;"/>';
+            }
          }
          echo '</div>';
 
@@ -4537,7 +4550,7 @@ function init_memcache()
       $MEMCACHE_SERVERS = array_values(array_filter($MEMCACHE_SERVERS));
 
       if ($use_libmemcached) {
-         var_dump($memcache->getServerList());         
+         //var_dump($memcache->getServerList());         
 
          $serverlist = array();
          foreach ($MEMCACHE_SERVERS as $server) {
@@ -4774,6 +4787,7 @@ function charts() {
    $i = 0;
    $addr = "";
    $host = "";
+   $hosts = "";
    $value = "";
    foreach($ips as $d) {
 	if ($i > 30)
@@ -4825,7 +4839,6 @@ function charts() {
 
    printf("<img src=\"chart.php?label=$labels[1]&data=$data&heading=$labels[0]\">\n");
    printf("<br/>\n");
-
 
    printf("</div>");
    printf("<br/>\n");

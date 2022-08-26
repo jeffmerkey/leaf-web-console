@@ -23,16 +23,14 @@ if (isset($_SERVER['REMOTE_ADDR']))
 
 $crlf = "\n";
 $siteurls = array(
-    array ( "https://www.icapsql.com",				 "monthly", "0.8"),
-    array ( "https://www.icapsql.com/?page=home",		 "monthly", "0.8"),
-    array ( "https://www.icapsql.com/?page=all",		 "monthly", "0.8"),
-    array ( "https://www.icapsql.com/?page=account",		 "monthly", "0.5"),
-    array ( "https://www.icapsql.com/?page=register",		 "monthly", "0.5"),
-    array ( "https://www.icapsql.com/?page=login",		 "monthly", "0.5"),
-    array ( "https://www.icapsql.com/?page=termsofservice",	 "monthly", "0.5"),
-    array ( "https://www.icapsql.com/?page=privacy",		 "monthly", "0.5"),
-    array ( "https://repository.icapsql.com",			 "monthly", "0.8"),
-    array ( "https://public.icapsql.com",			 "monthly", "0.8"),
+    array ( "https://proxy.icapsql.com",			 "monthly", "0.8"),
+    array ( "https://proxy.icapsql.com/?page=home",		 "monthly", "0.8"),
+    array ( "https://proxy.icapsql.com/?page=all",		 "monthly", "0.8"),
+    array ( "https://proxy.icapsql.com/?page=account",		 "monthly", "0.5"),
+    array ( "https://proxy.icapsql.com/?page=register",		 "monthly", "0.5"),
+    array ( "https://proxy.icapsql.com/?page=login",		 "monthly", "0.5"),
+    array ( "https://proxy.icapsql.com/?page=termsofservice",	 "monthly", "0.5"),
+    array ( "https://proxy.icapsql.com/?page=privacy",		 "monthly", "0.5"),
 );
 
 echo '<?xml version="1.0" encoding="UTF-8"?>'.$crlf;

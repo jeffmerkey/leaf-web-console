@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: http://www.icapsql.com/sitemap.xml
+Sitemap: http://proxy.icapsql.com/sitemap.xml

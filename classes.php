@@ -208,7 +208,8 @@ class DB
                     $_SESSION['mysql_error'] = 'Site is currently undergoing system maintenance'; 
                     return FALSE;
                 }
-		mysqli_query($this->link, "SET NAMES 'utf8'");
+		mysqli_query($this->link, "SET NAMES 'utf8mb4'");
+		mysqli_query($this->link, "SET CHARACTER SET utf8mb4");
                 return TRUE;
 	}
 	
@@ -312,6 +313,12 @@ class DB
 		mysqli_close($this->link);
 	}
 
+        function exec_sql($sqlfile) {
+           $this->source = file_get_contents($sqlfile);
+           return mysqli_multi_query($this->link,$this->source);
+        }
+
+
 }
 
 class PG
@@ -376,7 +383,7 @@ class PG
        return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
     } 
 
-    function paginate ($start, $ids, $window, $width, $query, $heading = 1, $ip='')
+    function paginate($start, $ids, $window, $width, $query, $heading = 1, $ip='')
     {
        foreach ($_GET as $f => $v)
           $$f = filter_var(strip_tags(trim($v)), FILTER_SANITIZE_STRING);

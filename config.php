@@ -49,7 +49,7 @@ else
    $db_client = "leaf";
    $db_table = "capture";
    $db_user = "root";
-   $db_pass = "margit123";
+   $db_pass = "";
 }
 
 $adminuser = "admin";
@@ -76,28 +76,27 @@ else
 $proxy_server = "127.0.0.1:3128";
 
 # cache settings
-$use_netcache="0";
+$use_netcache="1";
 $key_algo = "sha256";  // defaults to md5 if no also provided
 
 # memcache/memcached settings
 $use_memcache="0";
-$use_libmemcached = 0;
+$use_libmemcached = 1;
 $use_sasl = 0;
 $use_authfile = 0;
 $compress_threshold = 0;
 
 $MEMCACHE_SASL = "admin:pass";
-$MEMCACHE_SERVERS[] = "";
-//$MEMCACHE_SERVERS[] = "127.0.0.1,11211";
-//$MEMCACHE_SERVERS[] = "[::1],11211";
+$MEMCACHE_SERVERS[] = "127.0.0.1,11211";
+$MEMCACHE_SERVERS[] = "[::1],11211";
 
 # redis settings
-$use_redis = 0;
+$use_redis = 1;
 $use_redisauth = 0;
 $REDIS_AUTH = "password";
 //$REDIS_SERVERS[] = array();
-//$REDIS_SERVERS[] = array('localhost',              '127.0.0.1',     6379);
-//$REDIS_SERVERS[] = array('www.leaf.[::1]',         '[::1]',         6379);
+$REDIS_SERVERS[] = array('localhost',              '127.0.0.1',     6379);
+$REDIS_SERVERS[] = array('www.leaf.[::1]',         '[::1]',         6379);
 
 /*
    echo '<select name="lang">';
