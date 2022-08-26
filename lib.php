@@ -3598,6 +3598,8 @@ function search($page)
       unset($ip);
       unset($cls);
       unset($hostname);
+      unset($tag);
+      unset($untag);
 
       // wipe global _GET array since we are reseting on "Clear"
       unset($_GET['search']);
@@ -3607,6 +3609,8 @@ function search($page)
       unset($_GET['ip']);
       unset($_GET['cls']);
       unset($_GET['hostname']);
+      unset($_GET['tag']);
+      unset($_GET['untag']);
    }
 
    $q = "";
@@ -4024,10 +4028,14 @@ function search($page)
                $string .= '...';
             }
             echo '<a style="font-size:14pt;" href="'.$requrl.'">'.$string.'</a>';       
+	    if ($o->tagged)
+               echo '&nbsp;&nbsp;<img src="'.imageURL().'check.png" alt=""/>';
          }
          else {
             $string = highlight($string, $qwordlist, "");
             echo '<a style="font-size:14pt;" href="'.$requrl.'">'.$string.'</a>';     
+	    if ($o->tagged)
+               echo '&nbsp;&nbsp;<img src="'.imageURL().'check.png" alt=""/>';
          }
 
          // NOTE:  live language detection is processor intensive
@@ -4126,12 +4134,9 @@ function search($page)
                      continue;
                   $allurl[] = $pdffile;
               
-                  if ($i++)
-                     echo ', ';
-
                   $tmp = explode('/', $v);
                   $allpdf[] = '<a href="'.$v.'">'.str_replace('%20',' ',array_pop($tmp)).'</a>';
-                  if ($i > 2)
+                  if (++$i > 2)
                   {
                      $allpdf[] = '  <a href="'.baseURL().'?page=pdfcache&amp;cache='.
                                  $o->id.'">...</a>';
@@ -4145,7 +4150,10 @@ function search($page)
                echo '<td><img style="vertical-align:left;padding-right:10px;" src="'.imageURL().
                     'pdf_icon.png" alt=""/></td><td>';
 
+               $i = 0;
 	       foreach($allpdf as $pdflink) {
+                  if ($i++)
+	             echo ', ';
                   echo $pdflink;
                }
                echo '</td></tr></table><br style="clear:both;"/>';
@@ -4201,7 +4209,11 @@ function search($page)
               '">Req</a>';
          echo ' - <a href="'.baseURL().'?page=viewresponse&amp;cache='.$o->id.
               '">Resp</a>';
-         echo ' - <a href="'.baseURL().'?page=tagpage&amp;cache='.$o->id.'">tag</a>';
+         if ($o->tagged)
+            echo ' - <a href="'.baseURL().implode_get(explode_get('tag','untag='.$o->id.'')).'">Untag</a>';
+         else
+            echo ' - <a href="'.baseURL().implode_get(explode_get('untag','tag='.$o->id.'')).'">Tag</a>';
+
 /*
          if (is_admin())
          {
