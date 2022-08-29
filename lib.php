@@ -2903,7 +2903,8 @@ function extractcache()
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -2952,7 +2953,8 @@ function extractcondensed()
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3004,7 +3006,8 @@ function mailcache()
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3083,7 +3086,8 @@ function linkcache()
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3180,7 +3184,8 @@ function pdfcache($flags = 0)
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3289,7 +3294,8 @@ function imagecache()
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3364,7 +3370,8 @@ function cache($view)
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3428,7 +3435,8 @@ function http_headers($which)
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3484,7 +3492,8 @@ function view($page)
             if (!$o) {
                $res = $dbh->query($sql);
    	       $o = $dbh->fetch_object($res);
-               set_netcache($netcache, $querykey, $o, 600);
+               if (isset($o) and $o)
+                  set_netcache($netcache, $querykey, $o, 600);
             }
          }
          else {
@@ -3732,7 +3741,8 @@ function search($page)
             while ($o = $dbh->fetch_object($res)) { 
                $ids[] = array($o->id, $o->relevance); 
             }
-	    set_netcache($netcache, $querykey, $ids, 600);
+            if (count($ids))
+   	       set_netcache($netcache, $querykey, $ids, 600);
          }
       }
       else {
@@ -3891,7 +3901,8 @@ function search($page)
          if (!$o) {
             $res = $dbh->query($sql);
             $o = $dbh->fetch_object($res);
-	    set_netcache($netcache, $querykey, $o, 600);
+            if (isset($o) and $o)
+	       set_netcache($netcache, $querykey, $o, 600);
          }
       }
       else {
@@ -4187,7 +4198,8 @@ function search($page)
 
          $host = gethostbyaddr($o->ip);
          echo ' - <a href="'.baseURL().
-              implode_get(explode_get('ip,hostname,cls','ip='.$o->ip)).'">'.$o->ip.'</a>';
+              implode_get(explode_get('ip,hostname,cls','ip='.$o->ip)).'">'.$o->ip.
+              (($o->account) ? ' / '.$o->account : '').'</a>';
 
          echo ' - <a href="'.baseURL().'?page=viewcache&amp;cache='.$o->id.
               '">Cached</a>';
@@ -4712,7 +4724,8 @@ function charts() {
          while ($o = $dbh->fetch_object($res)) { 
             $urls[] = $o->url; 
          }
-         set_netcache($netcache, $querykey, $urls, 600);
+         if (count($urls))
+            set_netcache($netcache, $querykey, $urls, 600);
       }
    }
    else {
@@ -4744,7 +4757,8 @@ function charts() {
            if (!$row) {
               $res = $dbh->query($sql);
    	      $row = $dbh->fetch_row($res);
-              set_netcache($netcache, $querykey, $row, 600);
+              if (count($row))
+                 set_netcache($netcache, $querykey, $row, 600);
            }
         }
         else {
@@ -4784,7 +4798,8 @@ function charts() {
          while ($o = $dbh->fetch_object($res)) { 
             $ips[] = $o->ip; 
          }
-         set_netcache($netcache, $querykey, $ips, 600);
+         if (count($ips))
+            set_netcache($netcache, $querykey, $ips, 600);
       }
    }
    else {
@@ -4820,7 +4835,8 @@ function charts() {
            if (!$row) {
               $res = $dbh->query($sql);
    	      $row = $dbh->fetch_row($res);
-              set_netcache($netcache, $querykey, $row, 600);
+              if (count($row))
+                 set_netcache($netcache, $querykey, $row, 600);
            }
         }
         else {
@@ -5041,10 +5057,10 @@ function digest($limit = 0, $username = "")
       display_table(NULL,
                  'capture',  
                  '<th>ID</th> '.'<th>Date</th> '.'<th>IP</th> '.'<th style="width:70%;">Title</th> '.
-                 '<th>Relevance</th>',
+                 '<th>User Account</th>',
                  'title', 
                  $page, 
-                 'id,create_date,ip,title',
+                 'id,create_date,ip,title,account',
                  $function_list, 1, 1, $limit, 'create_date', $db_name);
 
    echo '<br style="clear:both;"/>';
