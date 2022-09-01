@@ -1961,43 +1961,66 @@ function input_select($element_name, $selected, $options, $multiple = false) {
 }
 
 function httpURL() { 
-   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
+   global $http_port;
+   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
    $protocol = "http"; 
-   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
-   return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+   if (isset($http_port) and $http_port) $port = ":".$http_port;
+   else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   $host = explode(":", $_SERVER['HTTP_HOST']);
+   return $protocol."://".$host[0].$port.$_SERVER['REQUEST_URI'];
 }
  
 function httpsURL() { 
-   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
+   global $https_port;
+   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
    $protocol = "https"; 
-   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
-   return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+   if (isset($https_port) and $https_port) $port = ":".$https_port;
+   else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   $host = explode(":", $_SERVER['HTTP_HOST']);
+   return $protocol."://".$host[0].$port.$_SERVER['REQUEST_URI'];
 }
  
 function baseURL() { 
-   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
+   global $http_port, $https_port;
+   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
-   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
-   return $protocol."://".$_SERVER['SERVER_NAME'].$port.'/';
+   if (isset($http_port) or isset($https_port)) {
+      if ($protocol == "https" and isset($https_port) and $https_port) $port = ":".$https_port;
+      else if (isset($http_port) and $http_port) $port = ":".$http_port;
+      else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   } else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   $host = explode(":", $_SERVER['HTTP_HOST']);
+   return $protocol."://".$host[0].$port.'/';
 } 
 
 function imageURL() { 
+   global $http_port, $https_port;
    global $imagedir;
-
-   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
+   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
-   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
-   return $protocol."://".$_SERVER['SERVER_NAME'].$port.$imagedir;
+   if (isset($http_port) or isset($https_port)) {
+      if ($protocol == "https" and isset($https_port) and $https_port) $port = ":".$https_port;
+      else if (isset($http_port) and $http_port) $port = ":".$http_port;
+      else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   } else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   $host = explode(":", $_SERVER['HTTP_HOST']);
+   return $protocol."://".$host[0].$port.$imagedir;
 } 
 
 function selfURL() { 
-   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
+   global $http_port, $https_port;
+   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
-   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
-   return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['PHP_SELF'];
+   if (isset($http_port) or isset($https_port)) {
+      if ($protocol == "https" and isset($https_port) and $https_port) $port = ":".$https_port;
+      else if (isset($http_port) and $http_port) $port = ":".$http_port;
+      else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   } else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   $host = explode(":", $_SERVER['HTTP_HOST']);
+   return $protocol."://".$host[0].$port.$_SERVER['PHP_SELF'];
 } 
 
 function selfURI() { 
@@ -2005,11 +2028,17 @@ function selfURI() {
 } 
 
 function fullURL() { 
-   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
+   global $http_port, $https_port;
+   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
-   $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
-   return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+   if (isset($http_port) or isset($https_port)) {
+      if ($protocol == "https" and isset($https_port) and $https_port) $port = ":".$https_port;
+      else if (isset($http_port) and $http_port) $port = ":".$http_port;
+      else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   } else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+   $host = explode(":", $_SERVER['HTTP_HOST']);
+   return $protocol."://".$host[0].$port.$_SERVER['REQUEST_URI'];
 } 
 
 function validateURL($url)

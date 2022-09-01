@@ -19,6 +19,9 @@ $showpassword = 0;
 $autologin = 1; 
 $autoactivate = 1; 
 
+$http_port = "";
+$https_port = "";
+
 $imagedir="/images/";
 $fontsdir="/fonts/";
 $keywords="https capture, http capture, network security, packet capture, stream to disk, networks, networking, network forensics";
