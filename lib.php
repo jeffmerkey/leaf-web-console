@@ -1080,9 +1080,9 @@ function display_log_table($table, $header, $data, $page, $refresh, $notice)
          {
             if ($i < 5) {
                if ($i == 1)
-                  echo '<td style="text-align:left;">&nbsp;&nbsp;'.$field.'</td>';
+                  echo '<td style="text-align:left;white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
                else
-                  echo '<td>&nbsp;&nbsp;'.$field.'</td>';
+                  echo '<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
 	       $export[$rowc][] = $field;
             }
             $i++;
@@ -5272,12 +5272,13 @@ function display_table($username = '', $table, $header, $match, $page, $select, 
             {
                //echo '<td>'.$functions[$i]($dbh, $field, $id, $page).'</td>';
                echo $functions[$i]($dbh, $field, $id, $page);
-	       $export[$rowc][] = html_entity_decode(strip_tags($functions[$i]($dbh, $field, $id, $page)), 
+	       $export[$rowc][] = 
+                      html_entity_decode(strip_tags($functions[$i]($dbh, $field, $id, $page)), 
                                                      ENT_COMPAT, 'UTF-8');
             }
             else
             {
-               echo '<td>'.$field.'</td>';
+               echo '<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">'.$field.'</td>';
 	       $export[$rowc][] = html_entity_decode($field, ENT_COMPAT, 'UTF-8');
             }
             $i++;
