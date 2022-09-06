@@ -83,7 +83,7 @@ $use_netcache="1";
 $key_algo = "sha256";  // defaults to md5 if no also provided
 
 # memcache/memcached settings
-$use_memcache="0";
+$use_memcache="1";
 $use_libmemcached = 1;
 $use_sasl = 0;
 $use_authfile = 0;
@@ -94,7 +94,7 @@ $MEMCACHE_SERVERS[] = "127.0.0.1,11211";
 $MEMCACHE_SERVERS[] = "[::1],11211";
 
 # redis settings
-$use_redis = 1;
+$use_redis = 0;
 $use_redisauth = 0;
 $REDIS_AUTH = "password";
 //$REDIS_SERVERS[] = array();

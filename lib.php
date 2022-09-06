@@ -4115,7 +4115,7 @@ function search($page)
             if (stristr($result, ".pdf"))
                $meta .= trim($result)."\n"; 
          } 
-
+/*
          preg_match_all('/src="(.+?)"/i', $o->page, $match); 
          foreach ($match[1] as $result) {
             if (stristr($result, ".pdf"))
@@ -4128,7 +4128,7 @@ function search($page)
             if (stristr($result, ".pdf"))
                $meta .= trim($result)."\n"; 
          } 
-/*
+
          preg_match_all('/<frame\s[^>]*src="(.+?)"/ie', $o->page, $match); 
          foreach ($match[1] as $result) {
             if (stristr($result, ".pdf"))
@@ -4735,7 +4735,7 @@ function charts() {
       return;
    }
    printf("<div id=\"chartdiv\">");
-   printf("<br/>\n");
+   printf("<br/>");
 
    $netcache = 0;
    if (isset($use_netcache) and $use_netcache) {
@@ -4811,10 +4811,10 @@ function charts() {
    $labels[1] = implode('*', $label_temp);
    $data = implode('*', $data_temp);
 
-   printf("<img src=\"chart.php?label=$labels[1]&data=$data&heading=$labels[0]\">\n");
-   printf("<br/>\n");
-   printf("<br/>\n");
-   printf("<hr/>\n");
+   printf("<img src=\"chart.php?label=$labels[1]&data=$data&heading=$labels[0]\">");
+   printf("<br/>");
+   printf("<br/>");
+   printf("<hr/>");
 
    $sql = "SELECT distinct(ip),count(id) from ".$db_table." GROUP BY ip ORDER BY count(id) DESC";
    if (isset($use_netcache) and $use_netcache and $netcache) {
@@ -4850,6 +4850,7 @@ function charts() {
 		break;
 
         if ($i++ > 0) {
+           $hosts .= '*';
            $host .= '*';
            $addr .= '*';
            $value .= '*';
@@ -4877,10 +4878,9 @@ function charts() {
 
         $hostname = gethostbyaddr($d);
 	if ($hostname) 	$hosts .= $hostname;
-	else            $hosts .= "localhost";
+	else            $hosts .= $d;
    }  
-   $df_output .= $hostname."\n";
-   //$df_output .= $addr."\n";
+   $df_output .= $hosts."\n";
    $df_output .= $value."\n";
    $df_lines = explode("\n", $df_output);
    $labels = explode("$", $df_lines[0]);
@@ -4894,11 +4894,12 @@ function charts() {
    $labels[1] = implode('*', $label_temp);
    $data = implode('*', $data_temp);
 
-   printf("<img src=\"chart.php?label=$labels[1]&data=$data&heading=$labels[0]\">\n");
-   printf("<br/>\n");
+
+   printf("<img src=\"chart.php?label=$labels[1]&data=$data&heading=$labels[0]\">");
+   printf("<br/>");
 
    printf("</div>");
-   printf("<br/>\n");
+   printf("<br/>");
 
    $dbh->close();
 }
