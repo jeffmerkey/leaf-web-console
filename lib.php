@@ -1079,10 +1079,10 @@ function display_log_table($table, $header, $data, $page, $refresh, $notice)
          foreach ($fields as $field)
          {
             if ($i < 5) {
-               if ($i == 1)
+               if ($i == 1 || $i == 4)
                   echo '<td style="text-align:left;white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
                else
-                  echo '<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
+                  echo '<td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
 	       $export[$rowc][] = $field;
             }
             $i++;
@@ -1094,7 +1094,7 @@ function display_log_table($table, $header, $data, $page, $refresh, $notice)
 
    echo '</table>';
    echo '</div>';
-   echo '<br/>';
+   echo '<hr/>';
 
    if (isset($pglist[2]))
       echo $pglist[2];
@@ -5055,9 +5055,27 @@ function show_all_accounts($limit = 0, $username = "")
    return;
 }
 
+function format_date($dbh, $field, $id, $page)
+{
+   $out = 
+   '<td width=10% style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">'.
+      $field.'</td>';
+   return $out;
+}
+
+function format_ip($dbh, $field, $id, $page)
+{
+   $out = 
+   '<td width=10% style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">'.
+   $field.'</td>';
+   return $out;
+}
+
 function left_format_title($dbh, $field, $id, $page)
 {
-   $out = '<td align="left" width="70%">&nbsp;&nbsp;&nbsp;'.$field.'</td>';
+   $out = 
+   '<td width=60% align="left" style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden;'.
+   ' max-width:1px;">&nbsp;&nbsp;&nbsp;'.$field.'</td>';
    return $out;
 }
 
@@ -5081,13 +5099,15 @@ function digest($limit = 0, $username = "")
    $function_list = array();
    for ($i=0; $i < 10; $i++)
       $function_list[$i] = NULL;
+   $function_list[1] = 'format_date';
+   $function_list[2] = 'format_ip';
    $function_list[3] = 'left_format_title';
 
    if (!$limit)
       display_table(NULL,
                  'capture',  
                  '<th>ID</th> '.'<th>Date</th> '.'<th>IP</th> '.'<th style="width:70%;">Title</th> '.
-                 '<th>User Account</th>',
+                 '<th>User</th>',
                  'title', 
                  $page, 
                  'id,create_date,ip,title,account',
@@ -5233,8 +5253,13 @@ function display_table($username = '', $table, $header, $match, $page, $select, 
 
    for ($y = 0; $y < $pg_window; $y++)
    {
-      if (!isset($ids[$x + $y]))
-         break;
+      if (!isset($ids[$x + $y])) {
+         echo '<tr>';
+         echo '<td>';
+         echo '</td>';
+         echo '</tr>';
+         continue;
+      }
 
       $id = $ids[$x + $y];
 
@@ -5291,7 +5316,6 @@ function display_table($username = '', $table, $header, $match, $page, $select, 
    echo '</div>';
    echo '<br style="clear:both;"/>';
    echo '<hr/>';
-   echo '<br style="clear:both;"/>';
 
    if ($find and isset($pglist[2]))
       echo $pglist[2];
