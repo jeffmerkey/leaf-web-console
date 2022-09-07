@@ -873,12 +873,13 @@ function show_access_log()
       return;
 
     display_log_table('archive', 
+                      '<th>ID</th> '.
                       '<th>Date</th> '.
                       '<th>Request</th> '.
                       '<th>IP</th> '.
                       '<th>DNS</th> '.
-                      '<th>User Agent</th> ',
-                      //'<th>Account</th>',
+                      '<th>User Agent</th> '.
+                      '<th>Account</th>',
                       'data',
                       'accesslog', 
                       'archive_logs', 
@@ -1076,13 +1077,26 @@ function display_log_table($table, $header, $data, $page, $refresh, $notice)
          echo '<tr style="text-align:center;">';
          $fields = explode(",", $o->data);
          $i = 0;
+
+         echo '<td width="3%" style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$o->id.'</td>';
+
          foreach ($fields as $field)
          {
-            if ($i < 5) {
-               if ($i == 1 || $i == 4)
+            if ($i < 6) {
+               switch ($i) {
+               case 1:
                   echo '<td style="text-align:left;white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
-               else
+                  break;
+               case 4:
+                  echo '<td style="text-align:left;white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
+                  break;
+               case 5:
+                  echo '<td width="3%" style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
+                  break;
+               default:
                   echo '<td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:1px;">&nbsp;&nbsp;'.$field.'</td>';
+                  break;
+               }
 	       $export[$rowc][] = $field;
             }
             $i++;
@@ -5055,6 +5069,14 @@ function show_all_accounts($limit = 0, $username = "")
    return;
 }
 
+function format_user($dbh, $field, $id, $page)
+{
+   $out = 
+   '<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">'.
+   '<a href="">'.$field.'</a></td>';
+   return $out;
+}
+
 function format_date($dbh, $field, $id, $page)
 {
    $out = 
@@ -5067,7 +5089,7 @@ function format_ip($dbh, $field, $id, $page)
 {
    $out = 
    '<td width=10% style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">'.
-   $field.'</td>';
+   '<a href="">'.$field.'</a></td>';
    return $out;
 }
 
@@ -5075,7 +5097,7 @@ function left_format_title($dbh, $field, $id, $page)
 {
    $out = 
    '<td width=60% align="left" style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden;'.
-   ' max-width:1px;">&nbsp;&nbsp;&nbsp;'.$field.'</td>';
+   ' max-width:1px;">&nbsp;&nbsp;&nbsp;<a href="">'.$field.'</a></td>';
    return $out;
 }
 
@@ -5102,6 +5124,7 @@ function digest($limit = 0, $username = "")
    $function_list[1] = 'format_date';
    $function_list[2] = 'format_ip';
    $function_list[3] = 'left_format_title';
+   $function_list[4] = 'format_user';
 
    if (!$limit)
       display_table(NULL,
@@ -5110,8 +5133,8 @@ function digest($limit = 0, $username = "")
                  '<th>User</th>',
                  'title', 
                  $page, 
-                 'id,create_date,ip,title,account',
-                 $function_list, 1, 1, $limit, 'create_date', $db_name);
+                 'id,create_date,ip,title,account,url',
+                 $function_list, 1, 1, $limit, 'create_date', $db_name, 5);
 
    echo '<br style="clear:both;"/>';
    return;
@@ -5122,7 +5145,7 @@ function digest($limit = 0, $username = "")
 //
 
 function display_table($username = '', $table, $header, $match, $page, $select, $functions = array(), 
-                       $deleted = 0, $find = 1, $limit = 0, $order = '', $db_name) 
+                       $deleted = 0, $find = 1, $limit = 0, $order = '', $db_name, $columnlimit = 0) 
 { 
    global $db_client;
 
@@ -5131,7 +5154,7 @@ function display_table($username = '', $table, $header, $match, $page, $select, 
    $orderlist = ' order by create_date DESC ';
 
    if ($order) 
-      $orderlist = ' order by '.$order.' ASC ';
+      $orderlist = ' order by '.$order.' DESC ';
 
    if (!isset($table) or !$table)
       return;
@@ -5254,10 +5277,6 @@ function display_table($username = '', $table, $header, $match, $page, $select, 
    for ($y = 0; $y < $pg_window; $y++)
    {
       if (!isset($ids[$x + $y])) {
-         echo '<tr>';
-         echo '<td>';
-         echo '</td>';
-         echo '</tr>';
          continue;
       }
 
@@ -5290,8 +5309,8 @@ function display_table($username = '', $table, $header, $match, $page, $select, 
 
          foreach ($row as $field)
          {
-//            if ($i >= count($select))
-//               break;
+            if ($columnlimit and $i >= $columnlimit)
+               break;
 
             if (isset($functions[$i]) and $functions[$i] and function_exists($functions[$i]))
             {
