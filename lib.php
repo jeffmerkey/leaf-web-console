@@ -2807,7 +2807,7 @@ function edit()
 {
    global $adminuser, $adminpassword;
    global $languages;
-   global $db_client;
+   global $db_client, $db_table;
 
    foreach ($_GET as $f => $v)
       $$f = filter_var(strip_tags(trim($v)), FILTER_SANITIZE_STRING);
@@ -2820,7 +2820,7 @@ function edit()
       return;
    }
 
-   $sql = "SELECT * FROM page ";
+   $sql = "SELECT * FROM ".$db_table." ";
    $where = "WHERE id=$cache and deleted='0' LIMIT 1";
    $res = $dbh->query($sql.$where);
    if ($o = $dbh->fetch_object($res))
