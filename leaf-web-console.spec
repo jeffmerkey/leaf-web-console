@@ -2,7 +2,7 @@
 %define debug_package %{nil}
 
 Summary:          Leaf Web Server Console
-License:          Proprietary
+License:          LGPL
 Name:             leaf-web-console
 Version:          1.3
 Release:          1
