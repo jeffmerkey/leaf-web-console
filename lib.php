@@ -1976,7 +1976,7 @@ function input_select($element_name, $selected, $options, $multiple = false) {
 
 function httpURL() { 
    global $http_port;
-   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
    $protocol = "http"; 
    if (isset($http_port) and $http_port) $port = ":".$http_port;
    else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
@@ -1986,7 +1986,7 @@ function httpURL() {
  
 function httpsURL() { 
    global $https_port;
-   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
    $protocol = "https"; 
    if (isset($https_port) and $https_port) $port = ":".$https_port;
    else $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
@@ -1996,7 +1996,7 @@ function httpsURL() {
  
 function baseURL() { 
    global $http_port, $https_port;
-   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
    if (isset($http_port) or isset($https_port)) {
@@ -2011,7 +2011,7 @@ function baseURL() {
 function imageURL() { 
    global $http_port, $https_port;
    global $imagedir;
-   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
    if (isset($http_port) or isset($https_port)) {
@@ -2025,7 +2025,7 @@ function imageURL() {
 
 function selfURL() { 
    global $http_port, $https_port;
-   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
    if (isset($http_port) or isset($https_port)) {
@@ -2043,7 +2043,7 @@ function selfURI() {
 
 function fullURL() { 
    global $http_port, $https_port;
-   $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+   $s = empty($_SERVER["HTTPS"]) ? '' : (($_SERVER["HTTPS"] == "on") ? "s" : ""); 
    $which = explode("/", $_SERVER["SERVER_PROTOCOL"]); 
    $protocol = strtolower($which[0]).$s; 
    if (isset($http_port) or isset($https_port)) {
